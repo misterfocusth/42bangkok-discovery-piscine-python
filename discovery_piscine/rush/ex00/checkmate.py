@@ -51,13 +51,29 @@ def checkmate(board):
     if isinstance(board, str):
         board = [line for line in board.splitlines() if line]
 
-    if not board or not any("K" in row for row in board):
-        print("Fail")
+    # Validate: board must be square and at most 8x8
+    if not board:
+        print("Error")
+        return
+
+    num_rows = len(board)
+    if num_rows > 8:
+        print("Error")
+        return
+
+    expected_cols = num_rows
+    for row in board:
+        if len(row) != expected_cols or len(row) > 8:
+            print("Error")
+            return
+
+    if not any("K" in row for row in board):
+        print("Error")
         return
 
     king_pos = find_king(board)
     if king_pos is None:
-        print("Fail")
+        print("Error")
         return
 
     if check_pawn(board, king_pos):
@@ -65,19 +81,19 @@ def checkmate(board):
         return
 
     directions = [
-        (-1, 0),  # บน
-        (1, 0),  # ล่าง
-        (0, -1),  # ซ้าย
+        (-1, 0), # บน
+        (1, 0), # ล่าง
+        (0, -1), # ซ้าย
         (0, 1),  # ขวา
-        (-1, -1),  # บนซ้าย
-        (-1, 1),  # บนขวา
-        (1, -1),  # ล่างซ้าย
+        (-1, -1), # บนซ้าย
+        (-1, 1), # บนขวา
+        (1, -1), # ล่างซ้าย
         (1, 1),  # ล่างขวา
     ]
 
     for dr, dc in directions:
         if check_line(board, king_pos, (dr, dc)):
-            print("Success")  # In Check
+            print("Success") # In Check
             return
 
     # Safe
